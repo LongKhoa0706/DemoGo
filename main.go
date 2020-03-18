@@ -1,91 +1,33 @@
 package main
 
 import (
-	"fmt"
-	"time"
+	"net/http"
+
+	"github.com/labstack/echo/v4"
 )
 
-// create oop
-type Student struct {
-	firstName string
-	lastName string
-
+func main() {
+	e := echo.New()
+	e.Use()
+	e.GET("/", func(c echo.Context) error {
+		return c.String(http.StatusOK, "Hello Golang!")
+	})
+	e.GET("/users/:id",getUser)
+	e.GET("/show",show)
+	e.Logger.Fatal(e.Start(":1323"))
 }
-// value receiver | Pointer receiver
-// value receiver allow create a copy in function Email and dont effect original
-// pointer receiver allow work original, add( * )
-func (s *Student ) FirstName() string  {
-
-	s.firstName = "abc234@gmail.com"
-	return s.firstName
+// e.GET("/users/:id", getUser)
+func getUser(c echo.Context) error {
+	// User ID from path `users/:id`
+	id := c.Param("id")
+	return c.String(http.StatusOK, id)
 }
-
-func  main() {
-
-	c := make(chan int )
-	go func() {
-		c <- 100
-	}()
-
-	go func() {
-			fmt.Println(<-c)
-	}()
-
-	go  g2()
-	time.Sleep(time.Second)
+//e.GET("/show", show)
+func show(c echo.Context) error {
+	// Get team and member from the query string
+	team := c.QueryParam("team")
+	member := c.QueryParam("member")
+	return c.String(http.StatusOK, "team:" + team + ", member:" + member)
 }
 
-func  g2()  {
-	fmt.Println("2")
-}
 
-// cach tao func trong golang
-func sayHello()  {
-	fmt.Println("Say Hello Func")
-}
-func  sum(a int, b int ) int  {
-	return  a + b
-}
-func  demoGo()  {
-	var email string = "abc"
-	fmt.Print(email)
-
-	// sorhand
-	fullName := "Hello World"
-	fmt.Print(fullName)
-
-	var number = 10
-	fmt.Print(number)
-	fmt.Println()
-}
-
-func demostructure()  {
-	s := make([]string,0)
-	s = append(s,"m")
-	s = append(s,"n")
-	fmt.Println(s)
-
-	//map
-	m := make(map[string] int )
-	m["key1"] = 90
-	fmt.Println(m)
-
-	// arrray
-	arr := [2]int{}
-	arr[0] = 50
-	arr[1] = 22
-	fmt.Println(arr)
-}
-
-func demostrucure1(){
-	st := Student{
-		firstName: "join",
-		lastName:  "loa",
-	}
-
-
-	e := st.FirstName()
-	fmt.Println(e)
-
-	fmt.Println(st.firstName)
-}
